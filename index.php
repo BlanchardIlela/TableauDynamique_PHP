@@ -31,7 +31,7 @@ $products = $pdo->query("SELECT * FROM products LIMIT 10")->fetchAll();
                 <tr>
                     <td>#<?= $product['id'] ?></td>
                     <td><?= $product['name'] ?></td>
-                    <td><?= $product['price'] ?></td>
+                    <td><?= number_format($product['price'], 0,'', '.'); ?> CDF</td>
                     <td><?= $product['city'] ?></td>
                     <td><?= $product['address'] ?></td>
                 </tr>
