@@ -1,4 +1,7 @@
 <?php
+
+use App\NumberHelper;
+
 require 'vendor/autoload.php';
 $pdo = new PDO("mysql:dbname=Tableau;host=localhost", 'root', 'root', [
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -16,6 +19,7 @@ $products = $pdo->query("SELECT * FROM products LIMIT 10")->fetchAll();
     <title>Tableau Dynamique</title>
 </head>
 <body>
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -31,7 +35,7 @@ $products = $pdo->query("SELECT * FROM products LIMIT 10")->fetchAll();
                 <tr>
                     <td>#<?= $product['id'] ?></td>
                     <td><?= $product['name'] ?></td>
-                    <td><?= number_format($product['price'], 0,'', '.'); ?> CDF</td>
+                    <td><?= NumberHelper::price($product['price']); ?></td>
                     <td><?= $product['city'] ?></td>
                     <td><?= $product['address'] ?></td>
                 </tr>
