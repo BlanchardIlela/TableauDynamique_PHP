@@ -1,5 +1,8 @@
 <?php
-
+$pdo = new PDO("mysql:dbname=Tableau;host=localhost", 'root', 'root', [
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+]);
 ?>
 
 <!DOCTYPE html>
