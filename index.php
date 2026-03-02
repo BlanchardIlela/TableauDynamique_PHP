@@ -7,7 +7,20 @@ $pdo = new PDO("mysql:dbname=Tableau;host=localhost", 'root', 'root', [
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
-$products = $pdo->query("SELECT * FROM products LIMIT 10")->fetchAll();
+
+$query = "SELECT * FROM products";
+$params = [];
+
+if (!empty($_GET['q'])) {
+    $query .= " WHERE city LIKE :city";
+    $params['city'] = '%' . $_GET['q'] . '%';
+}
+
+$query .= " LIMIT 10";
+
+$statement = $pdo->prepare($query);
+$statement->execute($params);
+$products = $statement->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -24,7 +37,7 @@ $products = $pdo->query("SELECT * FROM products LIMIT 10")->fetchAll();
     
     <form action="" method="get" class="mb-4">
         <div class="form-group">
-            <input type="text" name="q" id="" placeholder="Rechercher par ville" class="form-control">
+            <input type="text" name="q" id="" placeholder="Rechercher par ville" value="<?= htmlentities($_GET['q'] ?? null) ?>" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">Rechercher</button>
     </form>
