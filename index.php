@@ -18,7 +18,16 @@ $products = $pdo->query("SELECT * FROM products LIMIT 10")->fetchAll();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <title>Tableau Dynamique</title>
 </head>
-<body>
+<body class="p-4">
+
+    <h1>Les biens immobiliers</h1>
+    
+    <form action="" method="get" class="mb-4">
+        <div class="form-group">
+            <input type="text" name="q" id="" placeholder="Rechercher par ville" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+    </form>
 
     <table class="table table-striped">
         <thead>
