@@ -8,19 +8,32 @@ $pdo = new PDO("mysql:dbname=Tableau;host=localhost", 'root', 'root', [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
 
+define('PER_PAGE', 10);
+
 $query = "SELECT * FROM products";
+$queryCount = "SELECT COUNT(id) as count FROM products";
 $params = [];
 
+// Recherche par ville
 if (!empty($_GET['q'])) {
     $query .= " WHERE city LIKE :city";
     $params['city'] = '%' . $_GET['q'] . '%';
 }
 
-$query .= " LIMIT 10";
+// Pagination
+$page = (int)($_GET['p'] ?? 1);
+$offset = ($page-1) * PER_PAGE;
+
+$query .= " LIMIT " . PER_PAGE . " OFFSET $offset";
 
 $statement = $pdo->prepare($query);
 $statement->execute($params);
 $products = $statement->fetchAll();
+
+$statement = $pdo->prepare($queryCount);
+$statement->execute();
+$count = (int)$statement->fetch()['count'];
+$pages = ceil($count / PER_PAGE);
 ?>
 
 <!DOCTYPE html>
@@ -64,5 +77,13 @@ $products = $statement->fetchAll();
             <?php endforeach ?>
         </tbody>
     </table>
+
+    <?php if($pages > 1 && $page > 1): ?>
+        <a href="?p=<?= $page - 1 ?>" class="btn btn-primary">Page précedente</a>
+    <?php endif ?>
+
+    <?php if($pages > 1 && $page < $pages): ?>
+        <a href="?p=<?= $page + 1 ?>" class="btn btn-primary">Page suivante</a>
+    <?php endif ?>
 </body>
 </html>
