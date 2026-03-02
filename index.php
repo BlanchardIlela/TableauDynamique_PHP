@@ -1,8 +1,10 @@
 <?php
+require 'vendor/autoload.php';
 $pdo = new PDO("mysql:dbname=Tableau;host=localhost", 'root', 'root', [
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 ]);
+$products = $pdo->query("SELECT * FROM products LIMIT 10")->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -25,13 +27,15 @@ $pdo = new PDO("mysql:dbname=Tableau;host=localhost", 'root', 'root', [
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>#1</td>
-                <td>Bien 1</td>
-                <td>10 000 CDF</td>
-                <td>Masina</td>
-                <td>Kinshasa</td>
-            </tr>
+            <?php foreach($products as $product): ?>
+                <tr>
+                    <td>#<?= $product['id'] ?></td>
+                    <td><?= $product['name'] ?></td>
+                    <td><?= $product['price'] ?></td>
+                    <td><?= $product['city'] ?></td>
+                    <td><?= $product['address'] ?></td>
+                </tr>
+            <?php endforeach ?>
         </tbody>
     </table>
 </body>
