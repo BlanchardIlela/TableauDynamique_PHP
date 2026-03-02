@@ -1,0 +1,12 @@
+{
+    "name": "macbook/tableau-dynamique",
+    "authors": [
+        {
+            "name": "BlanchardIlela",
+            "email": "blancilela@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/var-dumper": "^7.4"
+    }
+}
