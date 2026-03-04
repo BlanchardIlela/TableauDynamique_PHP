@@ -1,6 +1,7 @@
 <?php
 
 use App\NumberHelper;
+use App\TableHelper;
 use App\URLHelper;
 
 require 'vendor/autoload.php';
@@ -14,12 +15,23 @@ define('PER_PAGE', 10);
 $query = "SELECT * FROM products";
 $queryCount = "SELECT COUNT(id) as count FROM products";
 $params = [];
+$sortable = ["id", "name", "city", "price", "address"];
 
 // Recherche par ville
 if (!empty($_GET['q'])) {
     $query .= " WHERE city LIKE :city";
     $queryCount .= " WHERE city LIKE :city";
     $params['city'] = '%' . $_GET['q'] . '%';
+}
+
+// Organisation
+
+if (!empty($_GET['sort']) && in_array($_GET['sort'], $sortable)) {
+    $direction = $_GET['dir'] ?? 'asc';
+    if (!in_array($direction, ['asc', 'desc'])) {
+        $direction = 'asc';
+    }
+    $query .=  " ORDER BY " . $_GET['sort'] . " $direction";
 }
 
 // Pagination
@@ -52,7 +64,7 @@ $pages = ceil($count / PER_PAGE);
     
     <form action="" method="get" class="mb-4">
         <div class="form-group">
-            <input type="text" name="q" id="" placeholder="Rechercher par ville" value="<?= htmlentities($_GET['q'] ?? null) ?>" class="form-control">
+            <input type="text" name="q" id="" placeholder="Rechercher par ville" value="<?= htmlentities($_GET['q'] ?? '') ?>" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">Rechercher</button>
     </form>
@@ -60,11 +72,11 @@ $pages = ceil($count / PER_PAGE);
     <table class="table table-striped">
         <thead>
             <tr>
-                <td>ID</td>
-                <td>Nom</td>
-                <td>Prix</td>
-                <td>Ville</td>
-                <td>Adresse</td>
+                <td><?= TableHelper::sort('id', 'ID', $_GET) ?></td>
+                <td><?= TableHelper::sort('name', 'Nom', $_GET) ?></td>
+                <td><?= TableHelper::sort('price', 'Prix', $_GET) ?></td>
+                <td><?= TableHelper::sort('city', 'Ville', $_GET) ?></td>
+                <td><?= TableHelper::sort('address', 'Adresse', $_GET) ?></td>
             </tr>
         </thead>
         <tbody>
@@ -81,11 +93,11 @@ $pages = ceil($count / PER_PAGE);
     </table>
 
     <?php if($pages > 1 && $page > 1): ?>
-        <a href="?<?= URLHelper::withParam("p", $page - 1) ?>" class="btn btn-primary">Page précedente</a>
+        <a href="?<?= URLHelper::withParam($_GET, "p", $page - 1) ?>" class="btn btn-primary">Page précedente</a>
     <?php endif ?>
 
     <?php if($pages > 1 && $page < $pages): ?>
-        <a href="?<?= URLHelper::withParam("p", $page + 1) ?>" class="btn btn-primary">Page suivante</a>
+        <a href="?<?= URLHelper::withParam($_GET, "p", $page + 1) ?>" class="btn btn-primary">Page suivante</a>
     <?php endif ?>
 </body>
 </html>
